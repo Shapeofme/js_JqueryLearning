@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>01</title>
+    <script src="../../资料/jq_sourcecode/jquery-1.10.1.js"></script>
+</head>
+<body>
+    <!-- 需求：点击"确定"按钮, 提示输入的值 -->
+    用户名：<input type="text" id="username">
+    <button id="btn1">确定(原生版)</button>
+    <button id="btn2">确定(jQuery版)</button>
+    <!-- 原生版 -->
+    <script>
+        var un = document.getElementById('username');
+        var btn1 = document.getElementById('btn1');
+        btn1.onclick = function(){
+            alert(un.value);
+        };
+    </script>
+    <!-- jQuery版 -->
+    <script>
+        $(function(){
+            $('#btn2').click(function(){
+                // alert(un.value);
+                alert($('#username').val());
+            })
+        });
+    </script>
+</body>
+</html>
