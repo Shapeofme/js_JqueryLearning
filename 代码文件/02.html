@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>02</title>
+    <script src="../资料/jq_sourcecode/jquery-1.10.1.js"></script>
+</head>
+<body>
+    <!-- 04jQuery对象 -->
+    <div id="d1">
+        <p></p>
+        <p><span></span></p>
+        <p><span></span></p>
+        <button>测试一</button>
+        <button>测试二</button>
+        <button id="btn3">测试三</button>
+        <button>测试四</button>
+    </div>
+    <script>
+        /* 总结：
+            0.jQuery对象命名规则：var $div = $('div')
+            1. jQuery对象是一个包含所有匹配的任意多个dom元素的伪数组对象
+                ->举例：[dom1,dom2,dom3...] = jQuery对象  
+                ->jQuery对象与Dom对象互转：$('btn')[index] == dom
+            2. 基本行为:
+                ->注意：$. 与 $(xxx). 是不同的，一个是$对象下的方法，一个是方法返回后的对象下的方法
+                ->size()/length: 包含的DOM元素个数
+                ->[index]/get(index): 得到对应位置的DOM元素
+
+                ->each(function(index,item){}): 遍历包含的所有DOM元素
+                    -function中的this是每次遍历时传入的数组元素
+                    举例：console.log(this === item);//true
+
+                ->index(): 得到在所在兄弟元素中的下标
+        */
+        //jQuery对象命名规则
+        var $btns = $('button');
+        //需求1. 统计一共有多少个按钮
+        console.log($btns.length+","+$btns.size());//4,4
+        //需求2. 取出第2个button的文本
+        console.log($btns.html());//测试一
+        console.log($btns[1].innerHTML);//测试二
+        //需求3. 输出所有button标签的文本
+        $btns.each(function(index,item){
+            console.log(index);
+            console.log(item);
+            console.log(this === item);//true
+            console.log(this.innerHTML);
+        })
+        //需求4. 输出'测试三'按钮是所有按钮中的第几个
+        //返回的是索引值  index  查找的是兄弟元素当中排第几
+        console.log($('#btn3').index());//5
+    </script>
+</body>
+</html>

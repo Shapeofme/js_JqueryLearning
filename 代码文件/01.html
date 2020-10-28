@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>01</title>
+    <script src="../资料/jq_sourcecode/jquery-1.10.1.js"></script>
+</head>
+
+<body>
+    <!-- 01jQuer测试 -->
+    <!-- 需求：点击"确定"按钮, 提示输入的值 -->
+    用户名：<input type="text" id="username">
+    <button id="btn1">确定(原生版)</button>
+    <button id="btn2">确定(jQuery版)</button>
+    <hr>
+    <script>
+        //原生版-btn1
+        var un = document.getElementById('username');
+        var btn1 = document.getElementById('btn1');
+        btn1.onclick = function () {
+            alert(un.value);
+        };
+        //jQuery版-btn2
+        $(function () {
+            $('#btn2').click(function () {
+                // alert(un.value);
+                alert($('#username').val());
+            })
+        });
+    </script>
+
+    <!-- 02jQuery核心函数 -->
+    <script>
+        /* 
+            1. jQuery核心函数
+            * 简称: jQuery函数($/jQuery)
+            * jQuery库向外直接暴露的就是$/jQuery
+            * 引入jQuery库后, 直接使用$即可
+                * 当函数用: $(xxx)
+                * 当对象用: $.xxx()
+            2. jQuery核心对象
+            * 简称: jQuery对象
+            * 得到jQuery对象: 执行jQuery函数返回的就是jQuery对象
+            * 使用jQuery对象: $obj.xxx()
+        */
+        console.log("jQuery核心函数和对象:");
+        console.log($ === window.$);//true
+        console.log($ === jQuery);//true
+        console.log(typeof $());//object
+        console.log(typeof $);//function
+    </script>
+
+    <!-- 03jQuery的核心函数 -->
+    <div class="box">
+        <button id="btn">原生版</button>
+        <button id="btn0">jQuery版</button>
+        <br/> 
+        <input type="text" name="msg1"/><br/>
+        <input type="text" name="msg2"/><hr>
+    </div>
+    <script>
+        /* 总结: jQuery对象(伪数组对象) 不等于 Dom对象
+            1.作为一般函数调用: $(param)
+                ->参数为函数 : 当DOM加载完成后，执行此回调函数 $(func)
+                ->参数为选择器字符串: 查找所有匹配的标签, 并将它们封装成jQuery对象 $('div#box')
+                ->参数为DOM对象: 将dom对象封装成jQuery对象 $(this)或$(document.getElementByid('box'))
+                ->参数为html标签字符串 (用得少): 创建标签对象并封装成jQuery对象
+            2.方法：
+                ->注意：$. 与 $(xxx). 是不同的，一个是$对象下的方法，一个是方法返回后的对象下的方法
+                ->$(xxx).html() 读出匹配元素内的标签内容
+                ->$(xxx).insertBefore('#box') 把所有匹配的元素插入到另一个、指定的元素元素集合的前面
+                    -参数：用于匹配元素的jQuery表达式,可以是css选择器，Dom对象,封装好的jQuery类数组对象(比如 $('#box'))
+                ->$.trim(str) 字符串去空
+                ->$.each(arr,function(index,item){...}) 遍历数组
+                    -function中的this是每次遍历时传入的数组元素
+                        console.log(this);//String {"a"},String {"b"},...
+                    -es6新增方法：arr.forEach(function(item,index,arr){...})
+
+         */
+        //需求1. 点击按钮: 显示按钮的文本, 显示一个新的输入框
+        //原版-btn
+        var btn = document.getElementById('btn');
+        var se_hr = document.querySelector('.box hr');
+
+        btn.onclick = function(){
+            alert(btn.innerHTML);
+            var ninput = document.createElement('input');//创建input标签
+            ninput.type = "text";//设置该标签为文本框
+            //分别获取到msg和数字
+            var arr = document.querySelector('div.box input:last-of-type').name.match(/(.{3})(\d+)/);
+            //每创建的input属性的数字增加：msg2 msg3 msg4...
+            ninput.name = arr[1]+(parseInt(arr[2])+1);
+            var br = document.createElement('br');
+            //console.log(this.parentNode.childNodes);
+            this.parentNode.insertBefore(br,se_hr);
+            this.parentNode.insertBefore(ninput,se_hr);
+        };
+
+        //jQuery版-btn0
+        //  1). 参数为函数 : 当DOM加载完成后，执行此回调函数
+        $(function(){
+            //2). 参数为选择器字符串: 查找所有匹配的标签, 并将它们封装成jQuery对象
+            $('#btn0').click(function(){
+                // alert(this.innerHTML);
+                //3). 参数为DOM对象: 将dom对象封装成jQuery对象
+                alert($(this).html());
+
+                // 4). 参数为html标签字符串 (用得少): 创建标签对象并封装成jQuery对象
+                var arr = $("div.box input:last-of-type")[0].name.match(/(.{3})(\d+)/);
+                // console.log(arr);
+                $('<br/><input type="text" name=""/>').insertBefore('div.box hr');
+                // $('<br/><input type="text" name=""/>').insertBefore($('div.box hr'));
+                // $('<br/><input type="text" name=""/>').insertBefore(se_hr);
+                $("div.box input:last-of-type")[0].name = arr[1]+(parseInt(arr[2])+1);
+            });
+        });
+
+        //需求2. 遍历输出数组中所有元素值
+        var arr = ["a","b","c","d"];
+        console.log("$.each遍历数组：");
+        $.each(arr,function(index,item){
+            console.log(this);//String {"a"},String {"b"},... 每次输入的数组元素
+            console.log(index+","+item);//0,a 1,b ...
+        });
+        console.log("arr.forEach遍历数组：");
+        arr.forEach(function(item,index,arr){
+            console.log(index+","+item+","+arr);//0,a,[...] 1,b,[...] ...
+        })
+        //需求3. 去掉"  my atguigu  "两端的空格
+        console.log("trim方法：");
+        var str = "   niu   ";
+        console.log(str.trim());
+        console.log($.trim(str));
+    </script>
+</body>
+</html>
